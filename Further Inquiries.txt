@@ -1,0 +1,398 @@
+Things to try/learn more
+
+Declaration, init conversion vs assignment 
+{}, (), =
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 2 Looping over array using array elements
+Ch 5 Ternary operator
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 9 Ptr
+Modify value after ptr and check ptr
+int * ptr {};
+int val = 55; 
+ptr = &val;
+cout << *ptr;
+val = 77;
+cout << *ptr
+
+Modify char ptr by travesing through the address of char ptr
+char * ptr {"some"};
+*ptr
+
+char array
+- is set in initialization
+- can be modified
+
+Pointer is just an integer
+char pointer
+- can be set later
+- fixed
+
+Traverse through pointer array - why range based does not work
+Modify number array pointers vs array
+by travesing through the address of char ptr
+
+Test heap vs stack more
+Heap problems are not caught in compile level - rather in runtime
+heap
+int * ptr {new int {5}}
+
+delete ptr
+ptr = nullptr
+
+Dangling Ptr
+Master ptr vs Slave ptr
+Try catch vs std nothrow
+Memory Leaks
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 10 Pointers vs references
+
+const type& {var} - only applies to reference
+const type* const p_var{&var} - ptr cannot change var values by deferencing
+                            - pointer is fixed
+const type* {&var} vs const type* const p_var{&var} 
+        - pointer can change where it is pointing in former
+
+Array works by reference
+
+const char * var = "string" means "string" is a constant too
+is string automatically a character array of const type
+then const char * var can point to any string
+
+constant pointer vs constant array
+string pointer vs string array as in char array pointer vs character array
+
+try heap:
+char *p_var = new char [10]{'a','b'};
+char *p_var = new char [10]{"ab"};
+
+pointers need to dereference but string pointers dont, how come?
+Better to pass string by reference
+
+string vs string_view?
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 11
+constructor is just a function that can be defined multiple times
+
+pass by pointer
+function taking pointer
+void fnc(type * p_var)
+{
+    *p_var...; // deference to access
+}
+
+call by address
+fnc(&var) or p_input
+
+pass by reference
+void fnc(type & r_var)
+{
+    r_var...;
+}
+fnc(var);
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 12
+compiler deals with std::string return type with pointer
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 13
+Overloading functions -> change input argument
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 14
+Lambda functions
+[capture list](parameters) -> return type{
+    // function body ;
+};
+
+start of expression can be assigned to variable of same or auto return type
+auto l_fnc = [](){}
+
+capture list can take in variables from outside by value and reference
+- set to "=" captures everything outside by value
+- set to "&" captures everything outside by reference
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 15 Function Template
+Blueprint to generate function - based on input arguments
+Helps with writing less repeatative function overloads
+
+Declaration: 
+<typename T> T function(T var_a, T var_b);
+
+Definition:
+template <typename T> 
+T function(T var_a, T var_b){
+    a..b..;
+}
+
+Type specific call - Template type instance
+- allows input arg to be different type, performs implicit conversion
+function<Type>(input arg);
+
+Pass by pointer has problems: investigate
+
+Pass by reference
+<typename T> const T& 
+function(const T& var_a, const T& var_b);
+
+Definition:
+<typename T> const T& 
+function(const T& var_a, const T& var_b){
+    a..b..;
+}
+
+Cannot have both pass by value and pass by reference templates defined
+
+Template Specialization - add specialization overload
+
+Declaration
+template<>
+[return type] function<[template argument specific type]>(input type a, input type b);
+
+Definition
+[return type] function<[template argument specific type]>(input type a, input type b){
+    a..b..;
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 16 Concepts - constraints on template function
+
+#include concepts
+- set constraints on template type parameters
+- concepts can be type and also type traits (std::is_[type])
+- keyword: requires
+
+Standard Library:
+
+After Template Declaration
+template <typename T> 
+requires std::[type]<T>
+T function(T var_a, T var_b){
+    a..b..;
+}
+
+In Template Declaration
+template <std::[type] T>
+T function(T var_a, T var_b){
+    a..b..;
+}
+
+In parameter list
+template <typename T> 
+auto function(auto std::[type] var_a, auto std::[type] var_b){
+    a..b..;
+}
+
+After parameter list
+template <typename T> 
+ .... this is the concept
+T function(T var_a, T var_b) requires std::[type]<T>{
+    a..b..;
+}
+
+Custom concept
+
+- Type trait requirement
+template <typename T> 
+concept [custom_concept] = std::type trait<T>
+
+- Argument operation type requirement
+- checks for type syntax, not actual operation
+template <typename T> 
+concept [custom_concept] = requires (arg list){
+    arg..action();              // evaluates only syntax
+}
+
+- then usage is same
+template <typename T> 
+requires [custom_concept]<T>
+
+Nested requirement
+- Argument operation evaluation requirement 
+template <typename T> 
+concept [custom_concept] = requires (arg list){
+    arg..action();
+    requires arg..action();     // evaluates the action for true
+}
+
+Compound requirement
+- check for exception
+template <typename T> 
+concept [custom_concept] = requires (arg list){
+    {arg..action()} -> (optional: noexcept) std::[conversion];
+}
+
+Combine concepts
+- using boolean operation AND:&& and OR:||
+template <typename T> 
+requires [concept1]<T> [BOOLEAN_OPERATION] [concept2]<T>        // combined requirement
+T function(T var_a, T var_b){
+    a..b..;
+}
+
+Concept constraint on auto type
+std::[type] auto function(auto std::[type] var_a, auto std::[type] var_b){
+    a..b..;
+}
+- Ensure return type by setting concept to auto var
+std::[type] auto var = func();
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 17
+
+Class structure
+
+class [class]{
+    public:
+        members
+    
+    public:
+        [cconstructor](input){
+            member = input;
+        }
+        function
+}
+
+// Setting default empty constructor in case there is a constructor
+but want to keep default constructor behavior
+[cconstructor]() = default
+
+[class] obj;        // calls by default empty constructor
+[class] obj();      // calls consturctors defined
+
+External access to class member:
+[class]::member
+
+Class pointers
+class pointer - stack
+Class obj(args);
+Class * p_obj = &obj;
+
+Dynamic class pointer - heap
+[class] * p_obj = new [class](args);
+
+Member access
+(*c_var).member - derefencing
+c_var->member - no need to dereference
+
+delete p_obj
+p_obj = nullptr;? is this done or not?
+
+Class Destructor
+~[cconstructor]()
+- Release memory
+- Setting variables to null
+
+Destructor is called when:
+- local stack goes out of scope
+- heap object is released - if not released, destructor not called
+- Object passed by value to function - reduces memory use - test this
+- Object returned by function
+
+Copy constructor - Need to learn
+Test pointer member in class copied for function call
+
+Constructor and Destructor call order
+constructor called in ascending order and destructor called in descending order
+
+This pointer
+- hidden pointer
+- manipulater current obj
+done from inside the member function
+
+- helps solve conflicting member variable name scenario
+this->[member] = var_member_name;
+
+- chained calls using pointer
+[class] * p_obj = new [class](args);
+p_obj->func1()->func2()->func3;
+
+[class] * func1{
+    return this;    // return pointer
+}
+
+- chained calls using reference
+[class] * p_obj = new [class](args);
+p_obj->func1().func2().func3;
+
+[class] & func1{
+    return *this;   // return reference
+}
+
+Try reference obj
+[class] & r_obj = new [class](args);
+p_obj.func1().func2().func3;
+
+[class] & func1{
+    return *this;   // return reference
+}
+
+Struct
+- members are public by default, unlike class
+- no function
+
+Size of class objects
+- accounts for size of member variables
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Ch 18 Inheritence
+note: By Inheritence we can only make the derived class constrained, not relaxed
+
+define [base class]
+class [base_class];   // forward declaration?
+
+class [derived_class]: [Inheritence_Contstraint] [base_class]{
+};
+
+[Inheritence_Contstraint] = public|protected|private
+
+friend class/function
+- has access to private members of derived class
+- no access to base class
+
+public Inheritence - derived class will have access to public and protected members
+(no change in derived class member access design)
+public -> public
+protected -> protected
+private -> private
+
+protected Inheritence - derived class will have access to public and protected members?
+public -> protected
+protected -> protected
+private -> private
+
+private Inheritence - derived class will have no access to base class members
+public -> private
+protected -> private
+private -> private
+
+Base Class  |   public Inheritence  | protected Inheritence |   private Inheritence
+-----------------------------------------------------------------------------------
+public      |   public              |   protected           |   private
+protected   |   protected           |   protected           |   private
+private     |   private             |   private             |   private
+
+class           |   public              |   protected               |   private
+access          |   object/external     |   only class function     |   only class function
+inheritence     |   object/external     |   only class function     |   only base class function
+
+Resurrection
+
+code in derived class
+using [base_class]::[member]
+
