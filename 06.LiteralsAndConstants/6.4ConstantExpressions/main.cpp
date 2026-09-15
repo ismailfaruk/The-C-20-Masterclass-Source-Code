@@ -26,11 +26,14 @@ int main(){
 	const int table_count{5};
 	constexpr int chair_count{ table_count * 5};// Works
 
-
+	std::cout << "room_count : " << room_count << std::endl;
+	std::cout << "door_count : " << door_count << std::endl;	
+	std::cout << "table_count : " << table_count << std::endl;
+	std::cout << "chair_count : " << chair_count << std::endl;
    // static_assert( SOME_LIB_MAJOR_VERSION == 123);
 
-   // int age = 5;
-   // static_assert( age == 5);
+   const int age = 5;
+   static_assert( age == 5);
 
     std::cout << "App doing its thing..." << std::endl;
 
