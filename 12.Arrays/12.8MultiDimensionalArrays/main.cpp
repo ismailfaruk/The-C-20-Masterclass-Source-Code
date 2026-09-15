@@ -16,7 +16,7 @@ int main(){
 
 
     //Read data from a 2D array
-    /*
+    
     for(size_t i{0} ; i < 3; ++ i){
 
         for(size_t j{0}; j < 4 ; ++j){
@@ -26,7 +26,14 @@ int main(){
         std::cout << std::endl;
 
     }
-    */
+
+    //iterator
+    for(auto &i : packages){
+        for (int j : i){
+            std::cout << j << "   ";
+        }
+        std::cout << std::endl;
+    }
 
 
 
@@ -84,11 +91,18 @@ int main(){
         }
     }
    
-
+    //iterator
+    for(auto &i : house_block){
+        for (auto &j : i){
+            for (int &k : j){
+                std::cout << k << "     ";
+            }
+        }
+    }
     /*
     const size_t num_cols{3};
     
-    int packages2 [] [5] {
+    int packages2 [] [3] {
         {1,2,3},
         {4,5,6},
         {7,8,9},
