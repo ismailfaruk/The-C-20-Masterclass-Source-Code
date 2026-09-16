@@ -20,9 +20,10 @@ int main(){
     std::cout << "base_rad(cylinder2) : " << p_cylinder2->get_base_radius() << std::endl;
 
 
-
+    p_cylinder1 = nullptr;
 
     delete p_cylinder2;
+    p_cylinder2 = nullptr;
    
     
     return 0;
