@@ -8,9 +8,7 @@ Ch 10 Ternary operator
 result = (condition) ? option1 : option2;
 ------------------------------------------------------------------------------------------------------------------------------
 Ch 12 Looping over array using array elements
-
 ------------------------------------------------------------------------------------------------------------------------------
-
 Ch 13 Ptr
 Set pointer with address
 int * ptr {&val};
@@ -21,52 +19,35 @@ Modify char ptr by travesing through the address of char ptr array
 ptr of string literal cannot be modified
 char * ptr {"string"} is read-only
 
-Test heap vs stack more
-Heap problems are not caught in compile level - rather in runtime
-heap
+const char * var = "string" means "string" is a constant too
+is string automatically a character array of const type
+then const char * var can point to any string
+
+Heap
 int * ptr {new }
 
 Always do
 delete ptr
 ptr = nullptr
 
-Try catch vs std nothrow - very useful, must setup
-
 Memory Leaks
 - Delete heap but pointer not reset (Dangling Ptr)
 - Double allocation to pointer
 - Not deleted in scope 
-
-------------------------------------------------------------------------------------------------------------------------------
+Try catch vs std nothrow - very useful, must try
 
 Ch 14 Pointers vs references
-
 const type& {var} - only applies to reference
 const type* const p_var{&var} - ptr cannot change var values by deferencing
                             - pointer is fixed
 const type* {&var} vs const type* const p_var{&var} 
         - pointer can change where it is pointing in former
 
-Array works by reference
-
-const char * var = "string" means "string" is a constant too
-is string automatically a character array of const type
-then const char * var can point to any string
-
-constant pointer vs constant array
-string pointer vs string array as in char array pointer vs character array
-
-try heap:
-char *p_var = new char [10]{'a','b'};
-char *p_var = new char [10]{"ab"};
-
-pointers need to dereference but string pointers dont, how come?
 Better to pass string by reference
-
-string vs string_view?
 ------------------------------------------------------------------------------------------------------------------------------
-
-Ch 16
+Ch 15 - TBD
+------------------------------------------------------------------------------------------------------------------------------
+Ch 16 Functions
 constructor is just a function that can be defined multiple times
 
 pass by pointer
@@ -75,7 +56,6 @@ void fnc(type * p_var)
 {
     *p_var...; // deference to access
 }
-
 call by address
 fnc(&var) or p_input
 
@@ -84,25 +64,18 @@ void fnc(type & r_var)
 {
     r_var...;
 }
+call by assignment
 fnc(var);
 
-------------------------------------------------------------------------------------------------------------------------------
+Compiler deals with std::string return type with pointer. It optimizes and uses same address
 
-Ch 12
-compiler deals with std::string return type with pointer
-
-------------------------------------------------------------------------------------------------------------------------------
-
-Ch 13
+Ch 20
 Overloading functions -> change input argument
 
-------------------------------------------------------------------------------------------------------------------------------
-
-Ch 14
-Lambda functions
+Ch 21 Lambda functions - anonymous functions
 [capture list](parameters) -> return type{
     // function body ;
-};
+}(self function call);
 
 start of expression can be assigned to variable of same or auto return type
 auto l_fnc = [](){}
@@ -110,10 +83,8 @@ auto l_fnc = [](){}
 capture list can take in variables from outside by value and reference
 - set to "=" captures everything outside by value
 - set to "&" captures everything outside by reference
-
 ------------------------------------------------------------------------------------------------------------------------------
-
-Ch 15 Function Template
+Ch 24 Function Template
 Blueprint to generate function - based on input arguments
 Helps with writing less repeatative function overloads
 
@@ -155,9 +126,7 @@ Definition
     a..b..;
 }
 
-------------------------------------------------------------------------------------------------------------------------------
-
-Ch 16 Concepts - constraints on template function
+Ch 25 Concepts - constraints on template function
 
 #include concepts
 - set constraints on template type parameters
@@ -241,7 +210,7 @@ std::[type] auto var = func();
 
 ------------------------------------------------------------------------------------------------------------------------------
 
-Ch 17
+Ch 26
 
 Class structure
 
@@ -339,7 +308,7 @@ Size of class objects
 
 ------------------------------------------------------------------------------------------------------------------------------
 
-Ch 18 Inheritence
+Ch 36 Inheritence
 note: By Inheritence we can only make the derived class constrained, not relaxed
 
 define [base class]
