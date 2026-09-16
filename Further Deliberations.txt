@@ -47,7 +47,7 @@ Better to pass string by reference
 ------------------------------------------------------------------------------------------------------------------------------
 Ch 15 - TBD
 ------------------------------------------------------------------------------------------------------------------------------
-Ch 16 Functions
+Ch 16 - Functions
 constructor is just a function that can be defined multiple times
 
 pass by pointer
@@ -72,106 +72,122 @@ Compiler deals with std::string return type with pointer. It optimizes and uses 
 Ch 20
 Overloading functions -> change input argument
 
-Ch 21 Lambda functions - anonymous functions
-[capture list](parameters) -> return type{
+Ch 21 - Lambda functions - anonymous functions
+type f_var = [capture list](parameters) -> return type{
     // function body ;
 }(self function call);
 
-start of expression can be assigned to variable of same or auto return type
-auto l_fnc = [](){}
+performs implicit type conversion based on input return type unless return type given
+Better to use auto return type if return not specified
+auto f_var = [](){}
 
 capture list can take in variables from outside by value and reference
+- works like variable declarion of the function
 - set to "=" captures everything outside by value
 - set to "&" captures everything outside by reference
+
+Ch 22 - Function Misfits
+Static var inside function is scoped inside function but has lifetime beyond the call
+Inline functions are like a direct copy of the function definition
 ------------------------------------------------------------------------------------------------------------------------------
-Ch 24 Function Template
+Ch 24 - Function Template
 Blueprint to generate function - based on input arguments
 Helps with writing less repeatative function overloads
 
 Declaration: 
-<typename T> T function(T var_a, T var_b);
+template <typename T>
+T function(T var_a, T var_b);
 
 Definition:
-template <typename T> 
+template <typename T>
 T function(T var_a, T var_b){
-    a..b..;
+    ..;
 }
 
-Type specific call - Template type instance
-- allows input arg to be different type, performs implicit conversion
+Type specific function call - Template type
+- allows template to be different type than input, enforces implicit conversion
 function<Type>(input arg);
 
-Pass by pointer has problems: investigate
-
 Pass by reference
-<typename T> const T& 
-function(const T& var_a, const T& var_b);
+Declaration:
+template <typename T>
+const T& function(const T& var_a, const T& var_b);
 
 Definition:
-<typename T> const T& 
-function(const T& var_a, const T& var_b){
+template <typename T>
+const T& function(const T& var_a, const T& var_b){
     a..b..;
 }
 
-Cannot have both pass by value and pass by reference templates defined
+- Cannot have both pass by value and pass by reference templates defined
+
+- Template vs Overload priority:
+1 Raw Overload
+2 Closest template type T match
+3 Generic template type T match
 
 Template Specialization - add specialization overload
 
-Declaration
+Declaration:
 template<>
 [return type] function<[template argument specific type]>(input type a, input type b);
 
-Definition
+Definition:
 [return type] function<[template argument specific type]>(input type a, input type b){
     a..b..;
 }
 
+For multiple types of input, return type is set by
+- use auto for function return type
+- decltype to get evaluate return type and trailing return (C++11)
+
 Ch 25 Concepts - constraints on template function
 
 #include concepts
+- Template would work only if requirement is fulfilled
 - set constraints on template type parameters
 - concepts can be type and also type traits (std::is_[type])
 - keyword: requires
 
-Standard Library:
+Concept declaration 4 syntaxes:
 
-After Template Declaration
+After Template Declaration:
 template <typename T> 
 requires std::[type]<T>
 T function(T var_a, T var_b){
     a..b..;
 }
 
-In Template Declaration
+In Template Declaration:
 template <std::[type] T>
 T function(T var_a, T var_b){
     a..b..;
 }
 
-In parameter list
+In parameter list:
 template <typename T> 
-auto function(auto std::[type] var_a, auto std::[type] var_b){
+std::[type] auto function(auto std::[type] var_a, auto std::[type] var_b){
     a..b..;
 }
 
-After parameter list
+After parameter list:
 template <typename T> 
- .... this is the concept
 T function(T var_a, T var_b) requires std::[type]<T>{
     a..b..;
 }
 
 Custom concept
-
 - Type trait requirement
+- Allows custom action of input parameter to determine a concept
+
 template <typename T> 
-concept [custom_concept] = std::type trait<T>
+concept [custom_concept] = std::[is_type_trait]<T>;
 
 - Argument operation type requirement
 - checks for type syntax, not actual operation
 template <typename T> 
-concept [custom_concept] = requires (arg list){
-    arg..action();              // evaluates only syntax
+concept [custom_concept] = requires (T a, T b){
+    arg..action();
 }
 
 - then usage is same
@@ -186,6 +202,7 @@ concept [custom_concept] = requires (arg list){
     requires arg..action();     // evaluates the action for true
 }
 
+TBD
 Compound requirement
 - check for exception
 template <typename T> 
@@ -210,56 +227,66 @@ std::[type] auto var = func();
 
 ------------------------------------------------------------------------------------------------------------------------------
 
-Ch 26
+Ch 26 - Class
 
 Class structure
 
 class [class]{
-    public:
+    public/protected/private:   // members are private by default
         members
+        function
     
     public:
-        [cconstructor](input){
-            member = input;
+        // Called based on argument passed when multiple constructors present
+        // same name as class
+        // can also be a template function with concepts
+        [class](type arg){
+            member = arg;
         }
-        function
 }
 
 // Setting default empty constructor in case there is a constructor
 but want to keep default constructor behavior
-[cconstructor]() = default
+[class]() = default
 
 [class] obj;        // calls by default empty constructor
 [class] obj();      // calls consturctors defined
 
-External access to class member:
+External access to public class members:
 [class]::member
 
-Class pointers
-class pointer - stack
-Class obj(args);
-Class * p_obj = &obj;
+External setup to class function/constructor:
+[class]::[class](type arg){
+    ...
+}
+[type] [class]::function(type arg){
+    ...
+}
+
+Class pointers - stack
+[class] obj(args);
+[class] * p_obj = &obj;
 
 Dynamic class pointer - heap
 [class] * p_obj = new [class](args);
 
 Member access
-(*c_var).member - derefencing
-c_var->member - no need to dereference
+(*p_obj).member - derefencing
+p_obj->member - no need to dereference
 
 delete p_obj
-p_obj = nullptr;? is this done or not?
+p_obj = nullptr
 
 Class Destructor
-~[cconstructor]()
-- Release memory
+~[class]()
+- Release dynamic memory
 - Setting variables to null
 
 Destructor is called when:
 - local stack goes out of scope
-- heap object is released - if not released, destructor not called
-- Object passed by value to function - reduces memory use - test this
-- Object returned by function
+- heap object is released using delete
+- Object passed by value to function - reduces memory use
+- Object returned by function - for some compilers
 
 Copy constructor - Need to learn
 Test pointer member in class copied for function call
@@ -270,7 +297,7 @@ constructor called in ascending order and destructor called in descending order
 This pointer
 - hidden pointer
 - manipulater current obj
-done from inside the member function
+- used from inside the member function
 
 - helps solve conflicting member variable name scenario
 this->[member] = var_member_name;
@@ -354,3 +381,4 @@ Resurrection
 code in derived class
 using [base_class]::[member]
 
+Ch 37 - Polymorphism
