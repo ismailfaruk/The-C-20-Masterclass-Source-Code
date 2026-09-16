@@ -1,56 +1,45 @@
 Things to try/learn more
 
-Declaration, init conversion vs assignment 
+Ch 4.9 Declaration, init conversion vs assignment 
 {}, (), =
+{} - prevents type conversion
+------------------------------------------------------------------------------------------------------------------------------
+Ch 10 Ternary operator
+result = (condition) ? option1 : option2;
+------------------------------------------------------------------------------------------------------------------------------
+Ch 12 Looping over array using array elements
 
 ------------------------------------------------------------------------------------------------------------------------------
 
-Ch 2 Looping over array using array elements
-Ch 5 Ternary operator
-------------------------------------------------------------------------------------------------------------------------------
-
-Ch 9 Ptr
-Modify value after ptr and check ptr
-int * ptr {};
-int val = 55; 
-ptr = &val;
+Ch 13 Ptr
+Set pointer with address
+int * ptr {&val};
+Pointer derefencing to get data
 cout << *ptr;
-val = 77;
-cout << *ptr
 
-Modify char ptr by travesing through the address of char ptr
-char * ptr {"some"};
-*ptr
-
-char array
-- is set in initialization
-- can be modified
-
-Pointer is just an integer
-char pointer
-- can be set later
-- fixed
-
-Traverse through pointer array - why range based does not work
-Modify number array pointers vs array
-by travesing through the address of char ptr
+Modify char ptr by travesing through the address of char ptr array
+ptr of string literal cannot be modified
+char * ptr {"string"} is read-only
 
 Test heap vs stack more
 Heap problems are not caught in compile level - rather in runtime
 heap
-int * ptr {new int {5}}
+int * ptr {new }
 
+Always do
 delete ptr
 ptr = nullptr
 
-Dangling Ptr
-Master ptr vs Slave ptr
-Try catch vs std nothrow
+Try catch vs std nothrow - very useful, must setup
+
 Memory Leaks
+- Delete heap but pointer not reset (Dangling Ptr)
+- Double allocation to pointer
+- Not deleted in scope 
 
 ------------------------------------------------------------------------------------------------------------------------------
 
-Ch 10 Pointers vs references
+Ch 14 Pointers vs references
 
 const type& {var} - only applies to reference
 const type* const p_var{&var} - ptr cannot change var values by deferencing
@@ -77,7 +66,7 @@ Better to pass string by reference
 string vs string_view?
 ------------------------------------------------------------------------------------------------------------------------------
 
-Ch 11
+Ch 16
 constructor is just a function that can be defined multiple times
 
 pass by pointer
