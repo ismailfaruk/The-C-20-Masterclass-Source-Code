@@ -16,17 +16,17 @@ int main(){
     //Printing out like this is unsafe : may go over and print
 	//outside your valid memory block
     //until a terminating null character is encountered.
-    /*
+    
 	std::cout << "Unsafe printing of members : " << std::endl;
     for (size_t i {0}; i < std::size(members) ; ++i){
         std::cout << members[i] << std::endl;
     }
-    */
+   
   
 
 
     //Can loop around manually printing out each character
-    /*
+    
 	std::cout << std::endl;
     std::cout << "Printing out character by character manually : " << std::endl;
     for (size_t i{0} ; i < std::size(members) ; ++i){
@@ -37,7 +37,7 @@ int main(){
         }
         std::cout << std::endl;
     }
-    */
+   
  
 
 
@@ -45,7 +45,7 @@ int main(){
 	//Compared to initialization with charactes with in '', this
 	// is even easier to type. The entire string is a single entity 
 	//you can manage easily.
-    /*
+    
     char members1 [][name_length] {
         "John",
         "Samuel",
@@ -58,7 +58,7 @@ int main(){
     for (size_t i {0}; i < std::size(members1) ; ++i){
         std::cout << members1[i] << std::endl;
     }
-    */
+   
    
 
 
