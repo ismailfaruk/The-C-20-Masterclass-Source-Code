@@ -3,6 +3,9 @@ Things to try/learn more
 Ch 4.9 Declaration, init conversion vs assignment 
 {}, (), =
 {} - prevents type conversion
+
+Ch 8 Bitwise operation
+8.3-8.7
 ------------------------------------------------------------------------------------------------------------------------------
 Ch 10 Ternary operator
 result = (condition) ? option1 : option2;
@@ -24,7 +27,7 @@ is string automatically a character array of const type
 then const char * var can point to any string
 
 Heap
-int * ptr {new }
+type * ptr {new type}
 
 Always do
 delete ptr
@@ -34,7 +37,6 @@ Memory Leaks
 - Delete heap but pointer not reset (Dangling Ptr)
 - Double allocation to pointer
 - Not deleted in scope 
-Try catch vs std nothrow - very useful, must try
 
 Ch 14 Pointers vs references
 const type& {var} - only applies to reference
@@ -44,6 +46,9 @@ const type* {&var} vs const type* const p_var{&var}
         - pointer can change where it is pointing in former
 
 Better to pass string by reference
+
+TBD Smart pointers
+std::unique_ptr<class> obj = std::make_unique<class>();
 ------------------------------------------------------------------------------------------------------------------------------
 Ch 15 - TBD
 ------------------------------------------------------------------------------------------------------------------------------
@@ -68,6 +73,8 @@ call by assignment
 fnc(var);
 
 Compiler deals with std::string return type with pointer. It optimizes and uses same address
+
+Ch 16.16-16.24 TBD
 
 Ch 20
 Overloading functions -> change input argument
@@ -226,11 +233,9 @@ std::[type] auto function(auto std::[type] var_a, auto std::[type] var_b){
 std::[type] auto var = func();
 
 ------------------------------------------------------------------------------------------------------------------------------
-
 Ch 26 - Class
 
 Class structure
-
 class [class]{
     public/protected/private:   // members are private by default
         members
@@ -249,26 +254,31 @@ class [class]{
 but want to keep default constructor behavior
 [class]() = default
 
-[class] obj;        // calls by default empty constructor
-[class] obj();      // calls consturctors defined
+[class] obj;                    // calls by default empty constructor
+[class] obj(arg);               // calls defined consturctor based on arg
+[class] obj = [class](arg);     // calls defined consturctor based on arg
+[class] obj{arg};               // calls defined consturctor based on arg, no type conversion
 
 External access to public class members:
 [class]::member
 
 External setup to class function/constructor:
-[class]::[class](type arg){
+[class]::[class](type arg):[initializer list]{
     ...
 }
 [type] [class]::function(type arg){
     ...
 }
 
+Initializer list:
+member{arg},member{arg}...
+
 Class pointers - stack
 [class] obj(args);
 [class] * p_obj = &obj;
 
-Dynamic class pointer - heap
-[class] * p_obj = new [class](args);
+Dynamic memory class pointer - heap
+[class] * p_obj = new [class](args);    // use {arg} to avoid type conversion
 
 Member access
 (*p_obj).member - derefencing
@@ -294,16 +304,17 @@ Test pointer member in class copied for function call
 Constructor and Destructor call order
 constructor called in ascending order and destructor called in descending order
 
-This pointer
+"this" pointer - contains address of class obj
 - hidden pointer
 - manipulater current obj
 - used from inside the member function
+- can be used to return the pointer to obj
 
 - helps solve conflicting member variable name scenario
-this->[member] = var_member_name;
+this->[member] = member;
 
 - chained calls using pointer
-[class] * p_obj = new [class](args);
+[class] * p_obj = new [class](args);    // use {arg} to avoid type conversion
 p_obj->func1()->func2()->func3;
 
 [class] * func1{
@@ -311,16 +322,16 @@ p_obj->func1()->func2()->func3;
 }
 
 - chained calls using reference
-[class] * p_obj = new [class](args);
+[class] * p_obj = new [class](args);    // use {arg} to avoid type conversion
 p_obj->func1().func2().func3;
 
 [class] & func1{
-    return *this;   // return reference
+    return *this;   // return dereference pointer
 }
 
-Try reference obj
+Reference obj - will auto remove if one is deconstructed
 [class] & r_obj = new [class](args);
-p_obj.func1().func2().func3;
+r_obj.func1().func2().func3;
 
 [class] & func1{
     return *this;   // return reference
@@ -333,10 +344,13 @@ Struct
 Size of class objects
 - accounts for size of member variables
 
+"explicit" constructor prevents single arg consturctors to be used for implicit conversions
 ------------------------------------------------------------------------------------------------------------------------------
-
+Ch 27 - 35 TBD
+------------------------------------------------------------------------------------------------------------------------------
 Ch 36 Inheritence
 note: By Inheritence we can only make the derived class constrained, not relaxed
+Base class constructor called first, in order of heirarchy
 
 define [base class]
 class [base_class];   // forward declaration?
@@ -352,11 +366,11 @@ friend class/function
 
 public Inheritence - derived class will have access to public and protected members
 (no change in derived class member access design)
-public -> public
+public -> public    // public members will be accessible from outside
 protected -> protected
 private -> private
 
-protected Inheritence - derived class will have access to public and protected members?
+protected Inheritence - derived class will have access to public and protected members
 public -> protected
 protected -> protected
 private -> private
@@ -365,6 +379,8 @@ private Inheritence - derived class will have no access to base class members
 public -> private
 protected -> private
 private -> private
+
+Public and protected members can be accessed by member functions and/or directly
 
 Base Class  |   public Inheritence  | protected Inheritence |   private Inheritence
 -----------------------------------------------------------------------------------
@@ -376,9 +392,64 @@ class           |   public              |   protected               |   private
 access          |   object/external     |   only class function     |   only class function
 inheritence     |   object/external     |   only class function     |   only base class function
 
-Resurrection
 
+Resurrection
 code in derived class
 using [base_class]::[member]
 
-Ch 37 - Polymorphism
+Chain constructor call for base class within derived class consturctor
+[derived_class]:[derived_class](type arg):[base_class](arg), [member](arg)
+
+Copy consturctor for copying class by reference than using by value
+[base_class]::[base_class](const & [base_class v_class]){
+    ...;
+}
+
+[derived_class]::[derived_class](const & [derived_class] v_class):[base_class](v_class), member{v_class.member}{
+    ...;
+}
+
+Inherit Base constructor by ressurection
+using [base_class]::[base_class];       // Inheriting constructor
+
+To reuse symbols through inheritence:   // for base and derived in case of same member name
+[derived_class] [d_obj];
+[d_obj].[member] = ...;
+[d_obj].[base_class].[member] = ...;
+
+Ch 37 - Polymorphism - Store class objects in collection
+Base pointer holding a Derived object
+
+Static binding:
+- Use pointer to setup object
+- Will need a function that takes in object pointer/reference and calls obj.func()
+
+[derived_class] d_obj;
+[base_class] * p_obj = &d_obj;
+[base_class] & p_obj = d_obj;
+
+Dynamic binding: Virtual functions      // looks at type of object calling and uses their func
+Calls function of object
+
+Declaration and Definition:
+virtual function(){
+    ...
+}
+
+[derived_class] d_obj;
+[base_class] * p_obj = &d_obj;
+p_obj->v_func();
+
+[base_class] & p_obj = d_obj;
+p_obj.v_func();
+
+function([base_class] * obj){
+    obj->v_func;
+}
+
+function([base_class] & obj){
+    obj.v_func;
+}
+
+Slicing
+[base_class] obj = [derived_class]();
