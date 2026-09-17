@@ -63,6 +63,7 @@ Dog::Dog(std::string_view name_param, std::string_view breed_param, int  age_par
 Dog::~Dog(){
     delete p_age;
     std::cout << "Dog destructor called for " << name << " at " << this <<  std::endl;
+    p_age = nullptr;
 }
 
 int main(){
